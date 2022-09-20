@@ -11,6 +11,12 @@
 #include <stdbool.h>
 
 
+struct Point;
+struct Node;
+
+typedef struct Point data_obj_t;
+typedef struct Node* node_obj_t;
+
 /**
  * @brief s
  */
@@ -21,7 +27,15 @@ struct Point
   int32_t s32_z;
 };
 
+enum ComparisonResult
+{
+  eFirstIsGreater = 1,
+  eEqual = 0,
+  eSecondIsGreater = -1,
+};
+
 int compare_data_obj_t(data_obj_t first, data_obj_t second);
+
 
 /**
  * @brief Binary tree node data type 
@@ -34,8 +48,7 @@ struct Node
   node_obj_t right;
 };
 
-typedef struct Point data_obj_t;
-typedef struct Node* node_obj_t;
+
 
 
 node_obj_t create_binary_tree_node(data_obj_t data);
@@ -44,7 +57,7 @@ node_obj_t create_binary_tree_node(data_obj_t data);
  * @brief Creation of binary tree
  * @return Root node of binary tree
  */
-node_obj_t create_binary_tree(void);
+node_obj_t create_binary_tree(data_obj_t data);
 
 /**
  * @brief Insertion of node in binary tree
