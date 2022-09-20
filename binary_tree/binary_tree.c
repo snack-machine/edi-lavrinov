@@ -70,6 +70,20 @@ node_obj_t find_in_binary_tree(node_obj_t root, data_obj_t data)
   }
 }
 
+node_obj_t min_in_binary_tree(node_obj_t root)
+{
+  if (root == NULL)
+  {
+    return NULL;
+  }
+  else if (root->left != NULL)
+  {
+    return min_in_binary_tree(root->left);
+  }
+
+  return root;
+}
+
 node_obj_t remove_from_binary_tree(node_obj_t root, data_obj_t data)
 {
   if (root == NULL)
@@ -110,7 +124,7 @@ node_obj_t remove_from_binary_tree(node_obj_t root, data_obj_t data)
     }
     else
     {
-      node_obj_t temp = find_minimum(root->right);
+      node_obj_t temp = min_in_binary_tree(root->right);
       root->data = temp->data;
       root->right = remove_from_binary_tree(root->right, temp->data);
     }

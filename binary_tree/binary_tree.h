@@ -66,6 +66,7 @@ node_obj_t create_binary_tree(data_obj_t data);
  */
 node_obj_t insert_into_binary_tree(node_obj_t root, data_obj_t data);
 node_obj_t find_in_binary_tree(node_obj_t root, data_obj_t data);
+node_obj_t min_in_binary_tree(node_obj_t root);
 node_obj_t remove_from_binary_tree(node_obj_t root, data_obj_t data);
 void delete_binary_tree(node_obj_t root);
 
