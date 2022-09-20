@@ -24,7 +24,7 @@ int compare_data_obj_t(data_obj_t first, data_obj_t second)
 
 node_obj_t create_binary_tree_node(data_obj_t data)
 {
-  node_obj_t node = (node_obj_t)malloc(sizeof(node_obj_t));
+  node_obj_t node = (node_obj_t)malloc(sizeof(struct Node));
   node->data = data;
   node->left = NULL;
   node->right = NULL;
