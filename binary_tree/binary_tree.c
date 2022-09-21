@@ -137,6 +137,8 @@ void delete_binary_tree(node_obj_t root)
   {
     delete_binary_tree(root->left);
     delete_binary_tree(root->right);
+    root->left = NULL;
+    root->right = NULL;
     free(root);
   }
 }
