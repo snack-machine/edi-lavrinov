@@ -22,9 +22,9 @@ typedef struct Node* node_obj_t;
  */
 struct Point
 {
-  int32_t s32_x;
-  int32_t s32_y;
-  int32_t s32_z;
+    int32_t s32_x;
+    int32_t s32_y;
+    int32_t s32_z;
 };
 
 /**
@@ -32,9 +32,9 @@ struct Point
  */
 enum ComparisonResult
 {
-  eFirstIsGreater = 1,
-  eEqual = 0,
-  eSecondIsGreater = -1,
+    eFirstIsGreater = 1,
+    eEqual = 0,
+    eSecondIsGreater = -1,
 };
 
 /**
@@ -51,10 +51,10 @@ int compare_data_obj_t(data_obj_t first, data_obj_t second);
  */
 struct Node
 {
-  data_obj_t data;
+    data_obj_t data;
 
-  node_obj_t left;
-  node_obj_t right;
+    node_obj_t left;
+    node_obj_t right;
 };
 
 
