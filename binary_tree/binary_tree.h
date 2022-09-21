@@ -43,7 +43,7 @@ enum ComparisonResult
  * @param second Data of second node
  * @return Returns "1" when first > second, "0" when first == second, "-1" when first < second
  */
-int compare_data_obj_t(data_obj_t first, data_obj_t second);
+enum ComparisonResult compare_data_obj_t(data_obj_t first, data_obj_t second);
 
 
 /**
@@ -51,10 +51,10 @@ int compare_data_obj_t(data_obj_t first, data_obj_t second);
  */
 struct Node
 {
-    data_obj_t data;
+  data_obj_t data;
 
-    node_obj_t left;
-    node_obj_t right;
+  node_obj_t left;
+  node_obj_t right;
 };
 
 
@@ -106,8 +106,8 @@ node_obj_t remove_from_binary_tree(node_obj_t root, data_obj_t data);
 /**
  * @brief Deletion of whole BST 
  * @param root Instance of BST
- * @return (void)
+ * @return Empty tree
  */
-void delete_binary_tree(node_obj_t root);
+node_obj_t delete_binary_tree(node_obj_t root);
 
 #endif // BINARY_TREE_H
