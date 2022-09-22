@@ -31,9 +31,9 @@ node_obj_t create_binary_tree_node(data_obj_t data)
     return node;
 }
 
-node_obj_t create_binary_tree(data_obj_t data)
+node_obj_t create_binary_tree(void)
 {
-    return create_binary_tree_node(data);
+    return NULL;
 }
 
 node_obj_t insert_into_binary_tree(node_obj_t root, data_obj_t data)
@@ -127,6 +127,8 @@ node_obj_t remove_from_binary_tree(node_obj_t root, data_obj_t data)
 
         free(temp);
     }
+
+    return root;
 }
 
 node_obj_t delete_binary_tree(node_obj_t root)

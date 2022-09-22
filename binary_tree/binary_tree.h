@@ -67,10 +67,9 @@ node_obj_t create_binary_tree_node(data_obj_t data);
 
 /**
  * @brief Creation of BST's first node
- * @param data Data object to be stored in first Node
- * @return Root node of binary tree
+ * @return Start node of BST 
  */
-node_obj_t create_binary_tree(data_obj_t data);
+node_obj_t create_binary_tree(void);
 
 /**
  * @brief Insertion of node in binary tree
