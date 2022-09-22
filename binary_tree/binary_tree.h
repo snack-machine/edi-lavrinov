@@ -95,7 +95,7 @@ node_t find_in_binary_tree(node_t objP_root, data_t objL_data);
 node_t min_in_binary_tree(node_t objP_root);
 
 /**
- * @brief Deletion of Node by data stored in it
+ * @brief Deletion of a Node with specific data
  * @param objP_root Instance of BST
  * @param objL_data Data object to remove from BST
  * @return Root of BST without removed Node
