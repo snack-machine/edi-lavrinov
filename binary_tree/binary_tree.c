@@ -6,13 +6,13 @@
 #include "binary_tree.h"
 
 
-enum ComparisonResult compare_data_obj_t(data_obj_t first, data_obj_t second)
+enum ComparisonResult compare_data_t(data_t objL_first, data_t objL_second)
 {
-    if (first.s32_x > second.s32_x)
+    if (objL_first.s32_x > objL_second.s32_x)
     {
         return eFirstIsGreater;
     }
-    else if (first.s32_x < second.s32_x)
+    else if (objL_first.s32_x < objL_second.s32_x)
     {
         return eSecondIsGreater;
     }
@@ -22,122 +22,122 @@ enum ComparisonResult compare_data_obj_t(data_obj_t first, data_obj_t second)
     }
 }
 
-node_obj_t create_binary_tree_node(data_obj_t data)
+node_t create_binary_tree_node(data_t objL_data)
 {
-    node_obj_t node = (node_obj_t)malloc(sizeof(struct Node));
-    node->data = data;
-    node->left = NULL;
-    node->right = NULL;
-    return node;
+    node_t objP_node = (node_t)malloc(sizeof(struct Node));
+    objP_node->objL_data = objL_data;
+    objP_node->objP_left = NULL;
+    objP_node->objP_right = NULL;
+    return objP_node;
 }
 
-node_obj_t create_binary_tree(void)
+node_t create_binary_tree(void)
 {
     return NULL;
 }
 
-node_obj_t insert_into_binary_tree(node_obj_t root, data_obj_t data)
+node_t insert_into_binary_tree(node_t objP_root, data_t objL_data)
 {
-    if (root == NULL)
+    if (objP_root == NULL)
     {
-        root = create_binary_tree_node(data);
+        objP_root = create_binary_tree_node(objL_data);
     }
-    else if (compare_data_obj_t(data, root->data) == eSecondIsGreater)
+    else if (compare_data_t(objL_data, objP_root->objL_data) == eSecondIsGreater)
     {
-        root->left = insert_into_binary_tree(root->left, data);
+        objP_root->objP_left = insert_into_binary_tree(objP_root->objP_left, objL_data);
     }
-    else if (compare_data_obj_t(data, root->data) == eFirstIsGreater)
+    else if (compare_data_t(objL_data, objP_root->objL_data) == eFirstIsGreater)
     {
-        root->right = insert_into_binary_tree(root->right, data);
+        objP_root->objP_right = insert_into_binary_tree(objP_root->objP_right, objL_data);
     }
 
-    return root;
+    return objP_root;
 }
 
-node_obj_t find_in_binary_tree(node_obj_t root, data_obj_t data)
+node_t find_in_binary_tree(node_t objP_root, data_t objL_data)
 {
-    if (root == NULL)
+    if (objP_root == NULL)
     {
-        return root;
+        return objP_root;
     }
-    else if (compare_data_obj_t(data, root->data) == eSecondIsGreater)
+    else if (compare_data_t(objL_data, objP_root->objL_data) == eSecondIsGreater)
     {
-        return find_in_binary_tree(root->left, data);
+        return find_in_binary_tree(objP_root->objP_left, objL_data);
     }
-    else if (compare_data_obj_t(data, root->data) == eFirstIsGreater)
+    else if (compare_data_t(objL_data, objP_root->objL_data) == eFirstIsGreater)
     {
-        return find_in_binary_tree(root->right, data);
+        return find_in_binary_tree(objP_root->objP_right, objL_data);
     }
     else
     {
-        return root;
+        return objP_root;
     }
 }
 
-node_obj_t min_in_binary_tree(node_obj_t root)
+node_t min_in_binary_tree(node_t objP_root)
 {
-    if (root == NULL)
+    if (objP_root == NULL)
     {
         return NULL;
     }
-    else if (root->left == NULL)
+    else if (objP_root->objP_left == NULL)
     {
-        return root;
+        return objP_root;
     }
     else
     {
-        return min_in_binary_tree(root->left);
+        return min_in_binary_tree(objP_root->objP_left);
     }
 }
 
-node_obj_t remove_from_binary_tree(node_obj_t root, data_obj_t data)
+node_t remove_from_binary_tree(node_t objP_root, data_t objL_data)
 {
-    node_obj_t temp;
+    node_t objP_temp;
 
-    if (root == NULL)
+    if (objP_root == NULL)
     {
         return NULL;
     }
-    else if (compare_data_obj_t(data, root->data) == eSecondIsGreater)
+    else if (compare_data_t(objL_data, objP_root->objL_data) == eSecondIsGreater)
     {
-        root->left = remove_from_binary_tree(root->left, data);
+        objP_root->objP_left = remove_from_binary_tree(objP_root->objP_left, objL_data);
     }
-    else if (compare_data_obj_t(data, root->data) == eFirstIsGreater)
+    else if (compare_data_t(objL_data, objP_root->objL_data) == eFirstIsGreater)
     {
-        root->right = remove_from_binary_tree(root->right, data);
+        objP_root->objP_right = remove_from_binary_tree(objP_root->objP_right, objL_data);
     }
-    else if (root->left && root->right)
+    else if (objP_root->objP_left && objP_root->objP_right)
     {
-        temp = min_in_binary_tree(root->right);
-        root->data = temp->data;
-        root->right = remove_from_binary_tree(root->right, root->data);
+        objP_temp = min_in_binary_tree(objP_root->objP_right);
+        objP_root->objL_data = objP_temp->objL_data;
+        objP_root->objP_right = remove_from_binary_tree(objP_root->objP_right, objP_root->objL_data);
     }
     else
     {
-        temp = root;
+        objP_temp = objP_root;
 
-        if (root->left == NULL)
+        if (objP_root->objP_left == NULL)
         {
-            root = root->right;
+            objP_root = objP_root->objP_right;
         }
-        else if (root->right == NULL)
+        else if (objP_root->objP_right == NULL)
         {
-            root = root->left;
+            objP_root = objP_root->objP_left;
         }
 
-        free(temp);
+        free(objP_temp);
     }
 
-    return root;
+    return objP_root;
 }
 
-node_obj_t delete_binary_tree(node_obj_t root)
+node_t delete_binary_tree(node_t objP_root)
 {
-    if (root != NULL)
+    if (objP_root != NULL)
     {
-        delete_binary_tree(root->left);
-        delete_binary_tree(root->right);
-        free(root);
+        delete_binary_tree(objP_root->objP_left);
+        delete_binary_tree(objP_root->objP_right);
+        free(objP_root);
     }
 
     return NULL;

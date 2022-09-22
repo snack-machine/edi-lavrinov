@@ -10,15 +10,15 @@
 
 /**
  * @brief Prints Point object
- * @param root Object of BST's data
+ * @param objL_data Object of BST's data
  */
-void print_node_data(data_obj_t data);
+void print_node_data(data_t objL_data);
 
 /**
  * @brief Prints all BST nodes
- * @param root Instance of BST
+ * @param objP_root Instance of BST
  */
-void print_bst_inorder(node_obj_t root);
+void print_bst_inorder(node_t objP_root);
 
 /**
  * @brief A general test of BST implementation 

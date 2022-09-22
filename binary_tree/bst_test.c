@@ -6,30 +6,30 @@
 #include "bst_test.h"
 
 
-void print_node_data(data_obj_t data)
+void print_node_data(data_t objL_data)
 {
     printf("[%d, %d, %d]; ", 
-           data.s32_x, data.s32_y, data.s32_z);
+           objL_data.s32_x, objL_data.s32_y, objL_data.s32_z);
 }
 
-void print_bst_inorder(node_obj_t root)
+void print_bst_inorder(node_t objP_root)
 {
-    if (root == NULL)
+    if (objP_root == NULL)
     {
         return;
     }
 
-    print_bst_inorder(root->left);
-    print_node_data(root->data);
-    print_bst_inorder(root->right);
+    print_bst_inorder(objP_root->objP_left);
+    print_node_data(objP_root->objL_data);
+    print_bst_inorder(objP_root->objP_right);
 }
 
 void test_bst(void)
 {
     // Creation of test sample
     #define TEST_SAMPLE_SIZE 15
-    data_obj_t test_data[TEST_SAMPLE_SIZE];
-    int test_data_x[TEST_SAMPLE_SIZE] = 
+    data_t objP_test_data[TEST_SAMPLE_SIZE];
+    int objP_test_data_x[TEST_SAMPLE_SIZE] = 
     {
         33, 21, 75, 90, -30,
         2, 87, -18, -75, -5,
@@ -38,81 +38,81 @@ void test_bst(void)
 
 
     // Creation of BST
-    node_obj_t bst_root = create_binary_tree();
+    node_t objP_bst_root = create_binary_tree();
                
-    bst_root = NULL;
+    objP_bst_root = NULL;
 
 
     // Inserting 15 nodes
     for (int i = 0; i < TEST_SAMPLE_SIZE; ++i)
     {
-        test_data[i].s32_x = test_data_x[i];
-        test_data[i].s32_y = test_data_x[i] + 10;
-        test_data[i].s32_z = test_data_x[i] - 10;
+        objP_test_data[i].s32_x = objP_test_data_x[i];
+        objP_test_data[i].s32_y = objP_test_data_x[i] + 10;
+        objP_test_data[i].s32_z = objP_test_data_x[i] - 10;
 
-        bst_root = insert_into_binary_tree(bst_root, test_data[i]);
+        objP_bst_root = insert_into_binary_tree(objP_bst_root, objP_test_data[i]);
     }
 
     printf("Created BST: \n");
-    print_bst_inorder(bst_root);
+    print_bst_inorder(objP_bst_root);
     printf("\n");
 
 
     // Trying to find nodes
-    node_obj_t search_result = find_in_binary_tree(bst_root, test_data[5]);
+    node_t objP_search_result = find_in_binary_tree(objP_bst_root, objP_test_data[5]);
     printf("Search result: \n");
-    print_node_data(search_result->data);
+    print_node_data(objP_search_result->objL_data);
     printf("\n");
 
-    search_result = find_in_binary_tree(bst_root, test_data[12]);
+    objP_search_result = find_in_binary_tree(objP_bst_root, objP_test_data[12]);
     printf("Search result: \n");
-    print_node_data(search_result->data);
+    print_node_data(objP_search_result->objL_data);
     printf("\n");
 
 
     // Trying to find no-existen nodes
-    data_obj_t non_existen_data;
-    non_existen_data.s32_x = 500;
-    non_existen_data.s32_y = 0;
-    non_existen_data.s32_z = 0;
+    data_t objL_non_existen_data;
+    objL_non_existen_data.s32_x = 500;
+    objL_non_existen_data.s32_y = 0;
+    objL_non_existen_data.s32_z = 0;
 
-    search_result = find_in_binary_tree(bst_root, non_existen_data);
+    objP_search_result = find_in_binary_tree(objP_bst_root, objL_non_existen_data);
     printf("Search result: \n");
     
-    if (search_result == NULL)
+    if (objP_search_result == NULL)
     {
         printf("BST doesn't contain this node\n");
     }
     else
     {
-        print_node_data(search_result->data);
+        print_node_data(objP_search_result->objL_data);
         printf("\n");
     }
 
 
     // Trying to delete from BST
-    bst_root = remove_from_binary_tree(bst_root, test_data[5]);
+    objP_bst_root = remove_from_binary_tree(objP_bst_root, objP_test_data[5]);
     printf("Deletion result: \n");
-    print_bst_inorder(bst_root);
+    print_bst_inorder(objP_bst_root);
     printf("\n");
 
-    bst_root = remove_from_binary_tree(bst_root, test_data[0]);
-    bst_root = remove_from_binary_tree(bst_root, test_data[14]);
+    objP_bst_root = remove_from_binary_tree(objP_bst_root, objP_test_data[0]);
+    objP_bst_root = remove_from_binary_tree(objP_bst_root, objP_test_data[14]);
     printf("Deletion result: \n");
-    print_bst_inorder(bst_root);
+    print_bst_inorder(objP_bst_root);
     printf("\n");
 
 
     // Trying to delete no-existen nodes
-    bst_root = remove_from_binary_tree(bst_root, non_existen_data);
+    objP_bst_root = remove_from_binary_tree(objP_bst_root, objL_non_existen_data);
     printf("Deletion result: \n");
-    print_bst_inorder(bst_root);
+    print_bst_inorder(objP_bst_root);
     printf("\n");
     
 
     // Deletion of BST
-    bst_root = delete_binary_tree(bst_root);
+    objP_bst_root = delete_binary_tree(objP_bst_root);
     printf("Empty BST: \n");
-    print_bst_inorder(bst_root);
+    print_bst_inorder(objP_bst_root);
     printf("\n");
 }

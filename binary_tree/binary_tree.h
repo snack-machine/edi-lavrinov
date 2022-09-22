@@ -14,8 +14,8 @@
 struct Point;
 struct Node;
 
-typedef struct Point data_obj_t;
-typedef struct Node* node_obj_t;
+typedef struct Point data_t;
+typedef struct Node* node_t;
 
 /**
  * @brief Data type to be stored in BST
@@ -39,74 +39,74 @@ enum ComparisonResult
 
 /**
  * @brief Compare stored data of two nodes of BST
- * @param first Data of first node
- * @param second Data of second node
+ * @param objL_first Data of first node
+ * @param objL_second Data of second node
  * @return Returns "1" when first > second, "0" when first == second, "-1" when first < second
  */
-enum ComparisonResult compare_data_obj_t(data_obj_t first, data_obj_t second);
+enum ComparisonResult compare_data_t(data_t objL_first, data_t objL_second);
 
 
 /**
- * @brief Binary tree Node data type 
+ * @brief Binary tree Node data type
  */
 struct Node
 {
-  data_obj_t data;
+  data_t objL_data;
 
-  node_obj_t left;
-  node_obj_t right;
+  node_t objP_left;
+  node_t objP_right;
 };
 
 
 /**
  * @brief Creation of Node
- * @param data Data object to be stored in new Node
+ * @param objL_data Data object to be stored in new Node
  * @return New instance of Node
  */
-node_obj_t create_binary_tree_node(data_obj_t data);
+node_t create_binary_tree_node(data_t objL_data);
 
 /**
  * @brief Creation of BST's first node
  * @return Start node of BST 
  */
-node_obj_t create_binary_tree(void);
+node_t create_binary_tree(void);
 
 /**
  * @brief Insertion of node in binary tree
- * @param root Instance of BST
- * @param data Data object to be stored in new Node
+ * @param objP_root Instance of BST
+ * @param objL_data Data object to be stored in new Node
  * @return Root node of binary tree
  */
-node_obj_t insert_into_binary_tree(node_obj_t root, data_obj_t data);
+node_t insert_into_binary_tree(node_t objP_root, data_t objL_data);
 
 /**
  * @brief Search for a specific node
- * @param root Instance of BST
- * @param data Data object to find in BST
+ * @param objP_root Instance of BST
+ * @param objL_data Data object to find in BST
  * @return Node with required data or NULL otherwise
  */
-node_obj_t find_in_binary_tree(node_obj_t root, data_obj_t data);
+node_t find_in_binary_tree(node_t objP_root, data_t objL_data);
 
 /**
  * @brief Search for a Node's data with minimum value  
- * @param root Instance of BST
+ * @param objP_root Instance of BST
  * @return Node with the smallest data value and NULL otherwise
  */
-node_obj_t min_in_binary_tree(node_obj_t root);
+node_t min_in_binary_tree(node_t objP_root);
 
 /**
  * @brief Deletion of Node by data stored in it
- * @param root Instance of BST
- * @param data Data object to remove from BST
+ * @param objP_root Instance of BST
+ * @param objL_data Data object to remove from BST
  * @return Root of BST without removed Node
  */
-node_obj_t remove_from_binary_tree(node_obj_t root, data_obj_t data);
+node_t remove_from_binary_tree(node_t objP_root, data_t objL_data);
 
 /**
  * @brief Deletion of whole BST 
- * @param root Instance of BST
+ * @param objP_root Instance of BST
  * @return Empty tree
  */
-node_obj_t delete_binary_tree(node_obj_t root);
+node_t delete_binary_tree(node_t objP_root);
 
 #endif // BINARY_TREE_H
