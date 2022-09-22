@@ -6,6 +6,7 @@
 #ifndef BINARY_TREE_H
 #define BINARY_TREE_H
 
+#include <stdlib.h>
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
