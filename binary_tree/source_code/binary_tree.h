@@ -18,6 +18,7 @@ struct Node;
 typedef struct Point data_t;
 typedef struct Node* node_t;
 
+
 /**
  * @brief Data type to be stored in BST
  */
@@ -27,25 +28,6 @@ struct Point
     int32_t s32_y;
     int32_t s32_z;
 };
-
-/**
- * @brief Enumeration to describe result of comparison
- */
-enum ComparisonResult
-{
-    eFirstIsGreater = 1,
-    eEqual = 0,
-    eSecondIsGreater = -1,
-};
-
-/**
- * @brief Compare stored data of two nodes of BST
- * @param objL_first Data of first node
- * @param objL_second Data of second node
- * @return Returns "1" when first > second, "0" when first == second, "-1" when first < second
- */
-enum ComparisonResult compare_data_t(data_t objL_first, data_t objL_second);
-
 
 /**
  * @brief Binary tree Node data type
@@ -58,6 +40,24 @@ struct Node
   node_t objP_right;
 };
 
+/**
+ * @brief Enumeration to describe result of comparison
+ */
+enum ComparisonResult
+{
+    eSecondIsGreater = -1,
+    eEqual = 0,
+    eFirstIsGreater = 1,
+};
+
+
+/**
+ * @brief Compare stored data of two nodes of BST
+ * @param objL_first Data of first node
+ * @param objL_second Data of second node
+ * @return Returns "1" when first > second, "0" when first == second, "-1" when first < second
+ */
+enum ComparisonResult compare_data_t(data_t objL_first, data_t objL_second);
 
 /**
  * @brief Creation of Node
@@ -65,12 +65,6 @@ struct Node
  * @return New instance of Node
  */
 node_t create_binary_tree_node(data_t objL_data);
-
-/**
- * @brief Creation of BST's first node
- * @return Start node of BST 
- */
-node_t create_binary_tree(void);
 
 /**
  * @brief Insertion of node in binary tree

@@ -38,9 +38,7 @@ void test_bst(void)
 
 
     // Creation of BST
-    node_t objP_bst_root = create_binary_tree();
-               
-    objP_bst_root = NULL;
+    node_t objP_bst_root = NULL;
 
 
     // Inserting 15 nodes

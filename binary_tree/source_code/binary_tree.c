@@ -31,11 +31,6 @@ node_t create_binary_tree_node(data_t objL_data)
     return objP_node;
 }
 
-node_t create_binary_tree(void)
-{
-    return NULL;
-}
-
 node_t insert_into_binary_tree(node_t objP_root, data_t objL_data)
 {
     if (objP_root == NULL)
@@ -50,7 +45,7 @@ node_t insert_into_binary_tree(node_t objP_root, data_t objL_data)
     {
         objP_root->objP_right = insert_into_binary_tree(objP_root->objP_right, objL_data);
     }
-
+    
     return objP_root;
 }
 
