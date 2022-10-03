@@ -72,7 +72,7 @@ void test_create_valid_node(void)
     objL_data.s32_x = INT_MAX;
     node_t objL_node = create_binary_tree_node(objL_data);
 
-    CU_ASSERT_PTR_NULL(objL_node);
+    CU_ASSERT_PTR_NOT_NULL(objL_node);
     CU_ASSERT_PTR_NULL(objL_node->objP_left);
     CU_ASSERT_PTR_NULL(objL_node->objP_right);
     CU_ASSERT_EQUAL(compare_data_t(objL_data, objL_node->objL_data), eEqual);
@@ -427,8 +427,6 @@ void test_delete_binary_tree(void)
     delete_binary_tree(objP_root);
 
     CU_ASSERT_PTR_NULL(objP_root);
-    CU_ASSERT_PTR_NULL(objP_root->objP_left);
-    CU_ASSERT_PTR_NULL(objP_root->objP_right);
 }
 
 
