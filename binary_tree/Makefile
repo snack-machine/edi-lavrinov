@@ -1,5 +1,7 @@
 # Recipe for building a Binary Search Tree and unit tests fot it
 
+CC := gcc
+
 BUILD_TARGET = binary_tree_build
 SOURCE_CODE_FOLDER = source_code/
 BUILD_FOLDER = build/
@@ -16,21 +18,21 @@ LIBS = -lcunit
 
 
 build: $(OBJ)
-	gcc $(OBJ) -o $(BUILD_FOLDER)$(BUILD_TARGET)
+	$(CC) $(OBJ) -o $(BUILD_FOLDER)$(BUILD_TARGET)
 
 $(OBJ_FOLDER)%.o: $(SOURCE_CODE_FOLDER)%.c
 	bash -c "if [ ! -d "$(OBJ_FOLDER)" ]; then mkdir -p $(OBJ_FOLDER); fi" 
-	gcc -c $< -o $@
+	$(CC) -c $< -o $@
 
 clean: 
 	rm -r $(BUILD_FOLDER)
 
 unit_tests: $(UT_OBJ_FOLDER)binary_tree.o $(UT_OBJ_FOLDER)unit_tests.o
-	gcc $(UT_OBJ_FOLDER)binary_tree.o $(UT_OBJ_FOLDER)unit_tests.o -o $(UT_BUILD_FOLDER)$(UT_TARGET) $(LIBS)
+	$(CC) $(UT_OBJ_FOLDER)binary_tree.o $(UT_OBJ_FOLDER)unit_tests.o -o $(UT_BUILD_FOLDER)$(UT_TARGET) $(LIBS)
 
 $(UT_OBJ_FOLDER)binary_tree.o: $(SOURCE_CODE_FOLDER)binary_tree.c
 	bash -c "if [ ! -d "$(UT_OBJ_FOLDER)" ]; then mkdir -p $(UT_OBJ_FOLDER); fi"
-	gcc -c $(SOURCE_CODE_FOLDER)binary_tree.c -o $(UT_OBJ_FOLDER)binary_tree.o
+	$(CC) -c $(SOURCE_CODE_FOLDER)binary_tree.c -o $(UT_OBJ_FOLDER)binary_tree.o
 
 $(UT_OBJ_FOLDER)unit_tests.o: $(UT_FOLDER)unit_tests.c 
-	gcc -c $(UT_FOLDER)unit_tests.c -o $(UT_OBJ_FOLDER)unit_tests.o
+	$(CC) -c $(UT_FOLDER)unit_tests.c -o $(UT_OBJ_FOLDER)unit_tests.o
