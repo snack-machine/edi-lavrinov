@@ -7,12 +7,15 @@
 #include <fcntl.h>
 #include <linux/fb.h>
 #include <linux/input.h>
+#include <sys/poll.h>
 #include <sys/mman.h>
 #include <sys/ioctl.h>
 
 
 char* cP_frame_buffer;
 int s32_frame_buffer_descriptor;
+struct pollfd objL_poll_file_descriptor;
+
 struct fb_var_screeninfo obj_fb_var_info;
 struct fb_fix_screeninfo obj_fb_fix_info;
 long int s32_screen_size;
@@ -100,53 +103,59 @@ int main(int argc, char** argv)
         return 0;
     }
 
-
     uint16_t u16L_begin_x = 100;
     uint16_t u16L_end_x = 200;
     uint16_t u16L_side_length = 100;
     uint16_t u16L_step = 10;
 
+    objL_poll_file_descriptor.fd = s32L_keyboard_device_descriptor;
+    objL_poll_file_descriptor.events = POLLIN;
+    poll(&objL_poll_file_descriptor, 1, -1);
+
     while (true)
     {
-        memset(u8P_key_map, 0, sizeof(u8P_key_map));
-        
-        usleep(20000);
-        ioctl(s32L_keyboard_device_descriptor, EVIOCGKEY(sizeof(u8P_key_map)), u8P_key_map);
+        if(objL_poll_file_descriptor.revents & POLLIN)
+        {
+            memset(u8P_key_map, 0, sizeof(u8P_key_map));
+            
+            usleep(20000);
+            ioctl(s32L_keyboard_device_descriptor, EVIOCGKEY(sizeof(u8P_key_map)), u8P_key_map);
 
-        if (key_is_pressed(KEY_LEFT))
-        {
-            if (u16L_begin_x - u16L_step >= 0)
+            if (key_is_pressed(KEY_LEFT))
             {
-                u16L_begin_x -= u16L_step;
-                u16L_end_x -= u16L_step;
+                if (u16L_begin_x - u16L_step >= 0)
+                {
+                    u16L_begin_x -= u16L_step;
+                    u16L_end_x -= u16L_step;
+                }
             }
-        }
-        else if (key_is_pressed(KEY_RIGHT))
-        {
-            if (u16L_begin_x + u16L_step <= obj_fb_var_info.xres)
+            else if (key_is_pressed(KEY_RIGHT))
             {
-                u16L_begin_x += u16L_step;    
-                u16L_end_x += u16L_step;
+                if (u16L_begin_x + u16L_step <= obj_fb_var_info.xres)
+                {
+                    u16L_begin_x += u16L_step;    
+                    u16L_end_x += u16L_step;
+                }
             }
-        }
-        else if (key_is_pressed(KEY_UP))
-        {
-            if (u8_color_green + u16L_step <= 255 && u8_color_blue - u16L_step >= 0)
+            else if (key_is_pressed(KEY_UP))
             {
-                u8_color_green += u16L_step;
-                u8_color_blue -= u16L_step;
+                if (u8_color_green + u16L_step <= 255 && u8_color_blue - u16L_step >= 0)
+                {
+                    u8_color_green += u16L_step;
+                    u8_color_blue -= u16L_step;
+                }
             }
-        }
-        else if (key_is_pressed(KEY_DOWN))
-        {
-            if (u8_color_blue + u16L_step <= 255 && u8_color_green - u16L_step >= 0)
+            else if (key_is_pressed(KEY_DOWN))
             {
-                u8_color_blue += u16L_step;
-                u8_color_green -= u16L_step;
+                if (u8_color_blue + u16L_step <= 255 && u8_color_green - u16L_step >= 0)
+                {
+                    u8_color_blue += u16L_step;
+                    u8_color_green -= u16L_step;
+                }
             }
-        }
 
-        draw_rectangle(u16L_begin_x, u16L_end_x, u16L_side_length);
+            draw_rectangle(u16L_begin_x, u16L_end_x, u16L_side_length);
+        }
     }    
 
 
