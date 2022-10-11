@@ -12,11 +12,14 @@
 #include <sys/ioctl.h>
 
 
-char* cP_frame_buffer;
-int s32_frame_buffer_descriptor;
-struct fb_var_screeninfo obj_fb_var_info;
-struct fb_fix_screeninfo obj_fb_fix_info;
-long int s32_screen_size;
+struct Framebuffer
+{
+    int s32_fb_descriptor;
+    struct fb_var_screeninfo obj_fb_var_info;
+    struct fb_fix_screeninfo obj_fb_fix_info;
+    long int s32L_screen_size;
+    char* cP_frame_buffer;
+};
 
 struct Color
 {
@@ -26,42 +29,47 @@ struct Color
 };
 
 
-void initialize_frame_buffer()
+struct Framebuffer* initialize_frame_buffer()
 {
-    s32_frame_buffer_descriptor = open("/dev/fb0", O_RDWR);
+    struct Framebuffer* objP_fb = malloc(sizeof(struct Framebuffer));
+    objP_fb->s32_fb_descriptor = open("/dev/fb0", O_RDWR);
 
-    if (-1 == s32_frame_buffer_descriptor) 
+    if (-1 == objP_fb->s32_fb_descriptor) 
     {
         perror("Error: can't open framebuffer device.\n");
-        return;
+        return NULL;
     }
 
-    if (-1 == ioctl(s32_frame_buffer_descriptor, FBIOGET_FSCREENINFO, &obj_fb_fix_info)) 
+    if (-1 == ioctl(objP_fb->s32_fb_descriptor, FBIOGET_FSCREENINFO, &objP_fb->obj_fb_fix_info)) 
     {
         perror("Error: can't read fixed information.\n");
-        return;
+        return NULL;
     }
 
-    if (-1 == ioctl(s32_frame_buffer_descriptor, FBIOGET_VSCREENINFO, &obj_fb_var_info)) 
+    if (-1 == ioctl(objP_fb->s32_fb_descriptor, FBIOGET_VSCREENINFO, &objP_fb->obj_fb_var_info)) 
     {
         perror("Error: can't read variable information.\n");
-        return;
+        return NULL;
     }
 
-    s32_screen_size = obj_fb_var_info.xres_virtual * obj_fb_var_info.yres_virtual * obj_fb_var_info.bits_per_pixel / 8;
-    cP_frame_buffer = (char*)mmap(0, s32_screen_size, PROT_READ | PROT_WRITE, MAP_SHARED, s32_frame_buffer_descriptor, 0);
+    objP_fb->s32L_screen_size = objP_fb->obj_fb_var_info.xres_virtual * objP_fb->obj_fb_var_info.yres_virtual *
+                                objP_fb->obj_fb_var_info.bits_per_pixel / 8;
+    objP_fb->cP_frame_buffer = (char*)mmap(0, objP_fb->s32L_screen_size, PROT_READ | PROT_WRITE, MAP_SHARED, 
+                                           objP_fb->s32_fb_descriptor, 0);
 
-    if (-1 == (int)*cP_frame_buffer) 
+    if (-1 == (int)*objP_fb->cP_frame_buffer) 
     {
         perror("Error: failed to map framebuffer device to memory.\n");
-        return;
+        return NULL;
     }
+
+    return objP_fb;
 }
 
 
-void draw_rectangle(uint16_t u16L_begin_x, uint16_t u16L_end_x, struct Color objL_color)
+void draw_rectangle(struct Framebuffer* objP_fb, uint16_t u16L_begin_x, uint16_t u16L_end_x, struct Color objL_color)
 {
-    memset(cP_frame_buffer, 0, s32_screen_size);
+    memset(objP_fb->cP_frame_buffer, 0, objP_fb->s32L_screen_size);
 
     uint16_t u16L_side_length = 100;
 
@@ -69,13 +77,15 @@ void draw_rectangle(uint16_t u16L_begin_x, uint16_t u16L_end_x, struct Color obj
     {
         for (int x = u16L_begin_x + u16L_side_length; x < u16L_end_x + u16L_side_length; ++x) 
         {   
-            long int s32L_location = (x + obj_fb_var_info.xoffset) * (obj_fb_var_info.bits_per_pixel / 8) + 
-                       (y + obj_fb_var_info.yoffset) * obj_fb_fix_info.line_length;
+            long int s32L_location = (x + objP_fb->obj_fb_var_info.xoffset) * 
+                                     (objP_fb->obj_fb_var_info.bits_per_pixel / 8) + 
+                                     (y + objP_fb->obj_fb_var_info.yoffset) * 
+                                     objP_fb->obj_fb_fix_info.line_length;
                        
-            *(cP_frame_buffer + s32L_location) = objL_color.u8_blue;      // blue
-            *(cP_frame_buffer + s32L_location + 1) = objL_color.u8_green; // green
-            *(cP_frame_buffer + s32L_location + 2) = objL_color.u8_red;   // red
-            *(cP_frame_buffer + s32L_location + 3) = 0;                   // transparency
+            *(objP_fb->cP_frame_buffer + s32L_location) = objL_color.u8_blue;      // blue
+            *(objP_fb->cP_frame_buffer + s32L_location + 1) = objL_color.u8_green; // green
+            *(objP_fb->cP_frame_buffer + s32L_location + 2) = objL_color.u8_red;   // red
+            *(objP_fb->cP_frame_buffer + s32L_location + 3) = 0;                   // transparency
         }
     }
 }
@@ -83,8 +93,8 @@ void draw_rectangle(uint16_t u16L_begin_x, uint16_t u16L_end_x, struct Color obj
 
 int main(int argc, char** argv) 
 {
-    initialize_frame_buffer();
- 
+    struct Framebuffer* objP_fb = initialize_frame_buffer();
+
     char* cP_keyboard_device = "/dev/input/by-path/platform-i8042-serio-0-event-kbd";
     int s32L_keyboard_device_descriptor;
     s32L_keyboard_device_descriptor = open(cP_keyboard_device, O_RDONLY);
@@ -94,6 +104,7 @@ int main(int argc, char** argv)
         printf("Error: keyboard device is invalid.\n");
         return 0;
     }
+
 
     struct pollfd objL_poll_file_descriptor;
     objL_poll_file_descriptor.fd = s32L_keyboard_device_descriptor;
@@ -110,6 +121,7 @@ int main(int argc, char** argv)
     objL_color.u8_green = 255;
     objL_color.u8_blue = 0;
 
+
     while (true)
     {
         poll(&objL_poll_file_descriptor, 1, -1);
@@ -117,8 +129,6 @@ int main(int argc, char** argv)
         if (objL_poll_file_descriptor.revents & POLLIN)
         {
             read(s32L_keyboard_device_descriptor, &objL_event, sizeof objL_event);
-
-            printf("\n pressed = %d", objL_event.code);
 
             switch (objL_event.code)
             {
@@ -131,7 +141,7 @@ int main(int argc, char** argv)
                 break;
 
             case KEY_RIGHT:
-                if (u16L_begin_x + u16L_step <= obj_fb_var_info.xres)
+                if (u16L_begin_x + u16L_step <= objP_fb->obj_fb_var_info.xres)
                 {
                     u16L_begin_x += u16L_step;    
                     u16L_end_x += u16L_step;
@@ -155,12 +165,13 @@ int main(int argc, char** argv)
                 break;  
             }
 
-            draw_rectangle(u16L_begin_x, u16L_end_x, objL_color);
+            draw_rectangle(objP_fb, u16L_begin_x, u16L_end_x, objL_color);
         }
     }    
 
-    munmap(cP_frame_buffer, s32_screen_size);
-    close(s32_frame_buffer_descriptor);
+    munmap(objP_fb->cP_frame_buffer, objP_fb->s32L_screen_size);
+    close(objP_fb->s32_fb_descriptor);
+    free(objP_fb);
 
     return 0;
 }
