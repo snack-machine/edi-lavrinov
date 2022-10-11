@@ -14,26 +14,16 @@
 
 char* cP_frame_buffer;
 int s32_frame_buffer_descriptor;
-struct pollfd objL_poll_file_descriptor;
-
 struct fb_var_screeninfo obj_fb_var_info;
 struct fb_fix_screeninfo obj_fb_fix_info;
 long int s32_screen_size;
 
-uint8_t u8P_key_map[KEY_MAX / 8 + 1];
-
-uint8_t u8_color_red = 0;
-uint8_t u8_color_green = 255;
-uint8_t u8_color_blue = 0;
-
-
-bool key_is_pressed(uint8_t u8L_key)
+struct Color
 {
-    int s32L_key_byte = u8P_key_map[u8L_key / 8];
-    int s32L_mask = 1 << (u8L_key % 8);
-
-    return (s32L_key_byte & s32L_mask) != 0;
-}
+    uint8_t u8_red;
+    uint8_t u8_green;
+    uint8_t u8_blue;
+};
 
 
 void initialize_frame_buffer()
@@ -69,9 +59,11 @@ void initialize_frame_buffer()
 }
 
 
-void draw_rectangle(uint16_t u16L_begin_x, uint16_t u16L_end_x, uint16_t u16L_side_length)
+void draw_rectangle(uint16_t u16L_begin_x, uint16_t u16L_end_x, struct Color objL_color)
 {
     memset(cP_frame_buffer, 0, s32_screen_size);
+
+    uint16_t u16L_side_length = 100;
 
     for (int y = u16L_begin_x; y < u16L_end_x; ++y)
     {
@@ -80,10 +72,10 @@ void draw_rectangle(uint16_t u16L_begin_x, uint16_t u16L_end_x, uint16_t u16L_si
             long int s32L_location = (x + obj_fb_var_info.xoffset) * (obj_fb_var_info.bits_per_pixel / 8) + 
                        (y + obj_fb_var_info.yoffset) * obj_fb_fix_info.line_length;
                        
-            *(cP_frame_buffer + s32L_location) = u8_color_blue;      // blue
-            *(cP_frame_buffer + s32L_location + 1) = u8_color_green; // green
-            *(cP_frame_buffer + s32L_location + 2) = u8_color_red;   // red
-            *(cP_frame_buffer + s32L_location + 3) = 0;              // transparency
+            *(cP_frame_buffer + s32L_location) = objL_color.u8_blue;      // blue
+            *(cP_frame_buffer + s32L_location + 1) = objL_color.u8_green; // green
+            *(cP_frame_buffer + s32L_location + 2) = objL_color.u8_red;   // red
+            *(cP_frame_buffer + s32L_location + 3) = 0;                   // transparency
         }
     }
 }
@@ -103,61 +95,69 @@ int main(int argc, char** argv)
         return 0;
     }
 
-    uint16_t u16L_begin_x = 100;
-    uint16_t u16L_end_x = 200;
-    uint16_t u16L_side_length = 100;
-    uint16_t u16L_step = 10;
-
+    struct pollfd objL_poll_file_descriptor;
     objL_poll_file_descriptor.fd = s32L_keyboard_device_descriptor;
     objL_poll_file_descriptor.events = POLLIN;
-    poll(&objL_poll_file_descriptor, 1, -1);
+
+    struct input_event objL_event;
+
+    uint16_t u16L_begin_x = 100;
+    uint16_t u16L_end_x = 200;
+    uint16_t u16L_step = 10;
+
+    struct Color objL_color;
+    objL_color.u8_red = 0;
+    objL_color.u8_green = 255;
+    objL_color.u8_blue = 0;
 
     while (true)
     {
-        if(objL_poll_file_descriptor.revents & POLLIN)
-        {
-            memset(u8P_key_map, 0, sizeof(u8P_key_map));
-            
-            usleep(20000);
-            ioctl(s32L_keyboard_device_descriptor, EVIOCGKEY(sizeof(u8P_key_map)), u8P_key_map);
+        poll(&objL_poll_file_descriptor, 1, -1);
 
-            if (key_is_pressed(KEY_LEFT))
+        if (objL_poll_file_descriptor.revents & POLLIN)
+        {
+            read(s32L_keyboard_device_descriptor, &objL_event, sizeof objL_event);
+
+            printf("\n pressed = %d", objL_event.code);
+
+            switch (objL_event.code)
             {
+            case KEY_LEFT:
                 if (u16L_begin_x - u16L_step >= 0)
                 {
                     u16L_begin_x -= u16L_step;
                     u16L_end_x -= u16L_step;
                 }
-            }
-            else if (key_is_pressed(KEY_RIGHT))
-            {
+                break;
+
+            case KEY_RIGHT:
                 if (u16L_begin_x + u16L_step <= obj_fb_var_info.xres)
                 {
                     u16L_begin_x += u16L_step;    
                     u16L_end_x += u16L_step;
                 }
-            }
-            else if (key_is_pressed(KEY_UP))
-            {
-                if (u8_color_green + u16L_step <= 255 && u8_color_blue - u16L_step >= 0)
+                break;
+
+            case KEY_UP:
+                if (objL_color.u8_green + u16L_step <= 255 && objL_color.u8_blue - u16L_step >= 0)
                 {
-                    u8_color_green += u16L_step;
-                    u8_color_blue -= u16L_step;
+                    objL_color.u8_green += u16L_step;
+                    objL_color.u8_blue -= u16L_step;
                 }
-            }
-            else if (key_is_pressed(KEY_DOWN))
-            {
-                if (u8_color_blue + u16L_step <= 255 && u8_color_green - u16L_step >= 0)
+                break;
+
+            case KEY_DOWN:
+                if (objL_color.u8_blue + u16L_step <= 255 && objL_color.u8_green - u16L_step >= 0)
                 {
-                    u8_color_blue += u16L_step;
-                    u8_color_green -= u16L_step;
+                    objL_color.u8_blue += u16L_step;
+                    objL_color.u8_green -= u16L_step;
                 }
+                break;  
             }
 
-            draw_rectangle(u16L_begin_x, u16L_end_x, u16L_side_length);
+            draw_rectangle(u16L_begin_x, u16L_end_x, objL_color);
         }
     }    
-
 
     munmap(cP_frame_buffer, s32_screen_size);
     close(s32_frame_buffer_descriptor);
