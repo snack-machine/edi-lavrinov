@@ -15,12 +15,8 @@ void* draw_rectangle_wrapper(void* args)
 
     timer_t timer = 0;
     struct sigevent signal_event = {0};
-    struct itimerspec timer_specs = {   
-                                        .it_value.tv_sec  = 1,
-                                        .it_value.tv_nsec = 0,
-                                        .it_interval.tv_sec = 1,
-                                        .it_interval.tv_nsec = 0
-                                    };
+    struct itimerspec timer_specs = { .it_value.tv_sec  = 1, .it_value.tv_nsec = 0, 
+                                      .it_interval.tv_sec = 1, .it_interval.tv_nsec = 0 };
 
     signal_event.sigev_notify = SIGEV_THREAD;
     signal_event.sigev_notify_function = &modify_rectangle_on_timer_expires;
@@ -36,18 +32,14 @@ void* draw_rectangle_wrapper(void* args)
 
     while (true)
     {
-
         // memset(casted_args->framebuffer->instance, 0, casted_args->framebuffer->screen_size);
         // modify_rectangle(casted_args->framebuffer, casted_args->rectangle, casted_args->event);
 
         pthread_mutex_lock(&mutex);
-
         // printf("wrapper casted_args->event = %d\n", casted_args->event->code);
-
-        sleep(1);
+        // sleep(1);
 
         draw_rectangle(casted_args->framebuffer, casted_args->rectangle);
-        
         pthread_mutex_unlock(&mutex);
     }
 }
@@ -93,13 +85,14 @@ int main(int argc, char** argv)
     rectangles[1]->color.blue = 0;
 
     struct DrawRectangleArgs* args2 = malloc(sizeof(struct DrawRectangleArgs));
-    args1->framebuffer = framebuffer;
-    args1->rectangle = rectangles[1];
+    args2->framebuffer = framebuffer;
+    args2->rectangle = rectangles[1];
+    args2->event = event;
 
-    // if (pthread_create(&rectangles[1]->thread, NULL, draw_rectangle_wrapper, args2) != 0)
-    // {
-    //     perror("Failed to create thread.");
-    // }
+    if (pthread_create(&rectangles[1]->thread, NULL, draw_rectangle_wrapper, args2) != 0)
+    {
+        perror("Failed to create thread.");
+    }
 
     while (true)
     {
@@ -109,15 +102,15 @@ int main(int argc, char** argv)
         {
             read(keyboard->descriptor, event, sizeof(struct input_event));
 
-
-
             // pthread_mutex_lock(&mutex);
             
-            printf("read a keyboard event [code] = %d \n", event->code);    
+            // printf("read a keyboard event [code] = %d \n", event->code);   
             // pthread_join(rectangles[0]->thread, NULL);
             // memset(framebuffer->instance, 0, framebuffer->screen_size);
+
+
             modify_rectangle(framebuffer, rectangles[0], event);
-            // modify_rectangle(framebuffer, rectangles[1], event.code);
+            modify_rectangle(framebuffer, rectangles[1], event);
 
             // pthread_mutex_unlock(&mutex);
         }
