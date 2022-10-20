@@ -74,48 +74,6 @@ int main(int argc, char** argv)
         }
     }
 
-    // Initialize first rectangle
-    // rectangles[0] = malloc(sizeof(struct Rectangle));
-    // rectangles[0]->x1 = 0;
-    // rectangles[0]->y1 = 0;
-    // rectangles[0]->x2 = 50;
-    // rectangles[0]->y2 = 50;
-    // rectangles[0]->color.red = 0;
-    // rectangles[0]->color.green = 255;
-    // rectangles[0]->color.blue = 0;
-
-    // struct DrawRectangleArgs* args1 = malloc(sizeof(struct DrawRectangleArgs));
-    // args1->framebuffer = framebuffer;
-    // args1->rectangle = rectangles[0];
-    // args1->event = event;
-    // args1->timer_interval = 1;
-    
-    // if (pthread_create(&rectangles[0]->thread, NULL, draw_rectangle_wrapper, args1) != 0)
-    // {
-    //     perror("Failed to create thread.");
-    // }
-
-    // Initialize second rectangle
-    // rectangles[1] = malloc(sizeof(struct Rectangle));
-    // rectangles[1]->x1 = 50;
-    // rectangles[1]->y1 = 50;
-    // rectangles[1]->x2 = 100;
-    // rectangles[1]->y2 = 100;
-    // rectangles[1]->color.red = 150;
-    // rectangles[1]->color.green = 255;
-    // rectangles[1]->color.blue = 0;
-
-    // struct DrawRectangleArgs* args2 = malloc(sizeof(struct DrawRectangleArgs));
-    // args2->framebuffer = framebuffer;
-    // args2->rectangle = rectangles[1];
-    // args2->event = event;
-    // args2->timer_interval = 2;
-
-    // if (pthread_create(&rectangles[1]->thread, NULL, draw_rectangle_wrapper, args2) != 0)
-    // {
-    //     perror("Failed to create thread.");
-    // }
-
     while (true)
     {
         poll(&keyboard->poll_file_descriptor, 1, -1);
