@@ -11,6 +11,11 @@
 #include <linux/fb.h>
 #include <sys/mman.h>
 #include <sys/ioctl.h>
+#include <linux/input.h>
+#include <pthread.h>
+#include <threads.h>
+#include <time.h>
+#include <signal.h>
 
 
 struct Framebuffer
@@ -36,11 +41,23 @@ struct Rectangle
     uint16_t y1;
     uint16_t x2;
     uint16_t y2;
+
+    pthread_t thread;
+};
+
+struct DrawRectangleArgs
+{
+    struct Framebuffer* framebuffer;
+    struct Rectangle* rectangle;
+    struct input_event* event;
 };
 
 struct Framebuffer* initialize_framebuffer();
 
-void draw_rectangle(struct Framebuffer* framebuffer, struct Rectangle rectangle);
+void modify_rectangle(struct Framebuffer* framebuffer, struct Rectangle* rectangle, struct input_event* event);
 
+void modify_rectangle_on_timer_expires(union sigval timer_data);
+
+void draw_rectangle(struct Framebuffer* framebuffer, struct Rectangle* rectangle);
 
 #endif // FRAMEBUFFER_H

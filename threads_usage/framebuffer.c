@@ -39,20 +39,76 @@ struct Framebuffer* initialize_framebuffer()
     return framebuffer;
 }
 
-void draw_rectangle(struct Framebuffer* framebuffer, struct Rectangle rectangle)
+void modify_rectangle(struct Framebuffer* framebuffer, struct Rectangle* rectangle, struct input_event* event)
 {
-    memset(framebuffer->instance, 0, framebuffer->screen_size);
+    uint16_t step = 10;
 
-    for (int x = rectangle.x1; x < rectangle.x2; ++x)
+    printf("modify_rectangle with event_code = %d\n", event->code);
+
+    switch (event->code)
     {
-        for (int y = rectangle.y1; y < rectangle.y2; ++y) 
+        case KEY_UP:
+            if (rectangle->color.green + step <= 255 && rectangle->color.blue - step >= 0)
+            {
+                rectangle->color.green += step;
+                rectangle->color.blue -= step;
+                printf("Working 1 on color change for rectangle with x1 = %d, GREEN = %d, BLUE = %d\n", rectangle->x1, 
+                                                                                                      rectangle->color.green,
+                                                                                                      rectangle->color.blue);
+            }
+            break;
+        case KEY_DOWN:
+            if (rectangle->color.blue + step <= 255 && rectangle->color.green - step >= 0)
+            {
+                rectangle->color.blue += step;
+                rectangle->color.green -= step;
+                printf("Working 2 on color change for rectangle with x1 = %d, GREEN = %d, BLUE = %d\n", rectangle->x1, 
+                                                                                                      rectangle->color.green,
+                                                                                                      rectangle->color.blue);
+            }
+            break;
+    }
+
+    // memset(framebuffer->instance, 0, framebuffer->screen_size);
+}
+
+void modify_rectangle_on_timer_expires(union sigval timer_data)
+{
+    struct DrawRectangleArgs* data = timer_data.sival_ptr;
+
+    printf("Timer 1 fires! With rec.x1 = %d\n", data->rectangle->x1);
+
+    uint16_t step = 10;
+
+    if (data->rectangle->x2 + step <= data->framebuffer->var_info.xres)
+    {
+        data->rectangle->x1 += step;
+        data->rectangle->x2 += step;
+    }
+    else
+    {   
+        data->rectangle->x1 = 0;
+        data->rectangle->x2 = 50;
+    }
+
+    memset(data->framebuffer->instance, 0, data->framebuffer->screen_size);
+}
+
+void draw_rectangle(struct Framebuffer* framebuffer, struct Rectangle* rectangle)
+{
+    printf("\nDRAW RECT. X1 = %d, R = %d, G = %d, B = %d\n", rectangle->x1, rectangle->color.red, 
+                                                                        rectangle->color.green, rectangle->color.blue);
+
+    for (int x = rectangle->x1; x < rectangle->x2; ++x)
+    {
+        for (int y = rectangle->y1; y < rectangle->y2; ++y) 
         {   
             long int pixel_location = (x + framebuffer->var_info.xoffset) * (framebuffer->var_info.bits_per_pixel / 8) +
                                       (y + framebuffer->var_info.yoffset) * framebuffer->fix_info.line_length;
                        
-            *(framebuffer->instance + pixel_location) = rectangle.color.blue;      // blue
-            *(framebuffer->instance + pixel_location + 1) = rectangle.color.green; // green
-            *(framebuffer->instance + pixel_location + 2) = rectangle.color.red;   // red
+            *(framebuffer->instance + pixel_location) = rectangle->color.blue;      // blue
+            *(framebuffer->instance + pixel_location + 1) = rectangle->color.green; // green
+            *(framebuffer->instance + pixel_location + 2) = rectangle->color.red;   // red
             *(framebuffer->instance + pixel_location + 3) = 0;                      // transparency
         }
     }
