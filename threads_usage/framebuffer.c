@@ -43,8 +43,6 @@ void modify_rectangle(struct Framebuffer* framebuffer, struct Rectangle* rectang
 {
     uint16_t step = 5;
 
-    // printf("modify_rectangle with event_code = %d\n", event->code);
-
     switch (event->code)
     {
         case KEY_UP:
@@ -52,8 +50,6 @@ void modify_rectangle(struct Framebuffer* framebuffer, struct Rectangle* rectang
             {
                 rectangle->color.green += step;
                 rectangle->color.blue -= step;
-                // printf("Color change for rectangle with x1 = %d, G = %d, B = %d\n", rectangle->x1, 
-                //        rectangle->color.green, rectangle->color.blue);
             }
             break;
         case KEY_DOWN:
@@ -61,20 +57,14 @@ void modify_rectangle(struct Framebuffer* framebuffer, struct Rectangle* rectang
             {
                 rectangle->color.blue += step;
                 rectangle->color.green -= step;
-                // printf("Color change for rectangle with x1 = %d, G = %d, B = %d\n", rectangle->x1, 
-                //        rectangle->color.green, rectangle->color.blue);
             }
             break;
     }
-
-    // memset(framebuffer->instance, 0, framebuffer->screen_size);
 }
 
 void modify_rectangle_on_timer_expires(union sigval timer_data)
 {
     struct DrawRectangleArgs* data = timer_data.sival_ptr;
-
-    // printf("Timer 1 fires! With rec.x1 = %d\n", data->rectangle->x1);
 
     uint16_t step = 10;
 
@@ -94,9 +84,6 @@ void modify_rectangle_on_timer_expires(union sigval timer_data)
 
 void draw_rectangle(struct Framebuffer* framebuffer, struct Rectangle* rectangle)
 {
-    // printf("\nDRAW RECT [%d] X1 = %d, R = %d, G = %d, B = %d\n", rectangle, rectangle->x1, rectangle->color.red, 
-    //                                                                     rectangle->color.green, rectangle->color.blue);
-
     for (int x = rectangle->x1; x < rectangle->x2; ++x)
     {
         for (int y = rectangle->y1; y < rectangle->y2; ++y) 
