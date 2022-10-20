@@ -94,8 +94,8 @@ void modify_rectangle_on_timer_expires(union sigval timer_data)
 
 void draw_rectangle(struct Framebuffer* framebuffer, struct Rectangle* rectangle)
 {
-    printf("\nDRAW RECT [%d] X1 = %d, R = %d, G = %d, B = %d\n", rectangle, rectangle->x1, rectangle->color.red, 
-                                                                        rectangle->color.green, rectangle->color.blue);
+    // printf("\nDRAW RECT [%d] X1 = %d, R = %d, G = %d, B = %d\n", rectangle, rectangle->x1, rectangle->color.red, 
+    //                                                                     rectangle->color.green, rectangle->color.blue);
 
     for (int x = rectangle->x1; x < rectangle->x2; ++x)
     {

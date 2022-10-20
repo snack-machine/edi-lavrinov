@@ -50,6 +50,7 @@ struct DrawRectangleArgs
     struct Framebuffer* framebuffer;
     struct Rectangle* rectangle;
     struct input_event* event;
+    time_t timer_interval;
 };
 
 struct Framebuffer* initialize_framebuffer();
