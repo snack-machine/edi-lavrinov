@@ -6,8 +6,7 @@
 #include <unistd.h>
 
 
-pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-
+sem_t semaphore;
 
 void* draw_rectangle_wrapper(void* args)
 {
@@ -32,21 +31,21 @@ void* draw_rectangle_wrapper(void* args)
 
     while (true)
     {
-        pthread_mutex_lock(&mutex);
+        sem_wait(&semaphore);
         draw_rectangle(casted_args->framebuffer, casted_args->rectangle);
-        pthread_mutex_unlock(&mutex);
+        sem_post(&semaphore);
     }
 }
 
 int main(int argc, char** argv)
 {
-    pthread_mutex_init(&mutex, NULL);
+    sem_init(&semaphore, 0, 1);
 
     struct Framebuffer* framebuffer = initialize_framebuffer();
     struct Keyboard* keyboard = initialize_keyboard();
     struct input_event* event = malloc(sizeof(struct input_event));
 
-    const size_t number_of_rectangles = 2;
+    const size_t number_of_rectangles = 3;
     struct Rectangle* rectangles[number_of_rectangles];
     struct DrawRectangleArgs* args[number_of_rectangles];
 
@@ -54,9 +53,9 @@ int main(int argc, char** argv)
     for (int i = 0; i < number_of_rectangles; ++i)
     {
         rectangles[i] = malloc(sizeof(struct Rectangle));
-        rectangles[i]->x1 = 0 + i * 50;
+        rectangles[i]->x1 = 0;
         rectangles[i]->y1 = 0 + i * 50;
-        rectangles[i]->x2 = 50 * (i + 1);
+        rectangles[i]->x2 = 50;
         rectangles[i]->y2 = 50 * (i + 1);
         rectangles[i]->color.red = (i % 2 == 0 ? 150 : 0);
         rectangles[i]->color.green = 255;
@@ -92,7 +91,7 @@ int main(int argc, char** argv)
     munmap(framebuffer->instance, framebuffer->screen_size);
     close(framebuffer->descriptor);
 
-    pthread_mutex_destroy(&mutex);
+    sem_destroy(&semaphore);
 
     free(framebuffer);
     free(event);

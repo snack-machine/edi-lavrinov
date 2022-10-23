@@ -14,6 +14,7 @@
 #include <linux/input.h>
 #include <pthread.h>
 #include <threads.h>
+#include <semaphore.h>
 #include <time.h>
 #include <signal.h>
 
