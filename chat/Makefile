@@ -6,11 +6,11 @@ all: server client
 
 server:
 	bash -c "if [ ! -d "$(BUILD_FOLDER)" ]; then mkdir -p $(BUILD_FOLDER); fi"
-	$(CC) server.c -o $(BUILD_FOLDER)server
+	$(CC) server.c utils.c -o $(BUILD_FOLDER)server
 
 client:
 	bash -c "if [ ! -d "$(BUILD_FOLDER)" ]; then mkdir -p $(BUILD_FOLDER); fi"
-	$(CC) client.c -o $(BUILD_FOLDER)client
+	$(CC) client.c utils.c -o $(BUILD_FOLDER)client
 
 clean:
 	rm -r $(BUILD_FOLDER)
