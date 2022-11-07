@@ -34,7 +34,7 @@ typedef struct
 
 int handle_error(int result, char* error_message);
 
-char* get_current_time_string();
+void get_current_time_string(char* time_string);
 
 void print_message(char* message);
 

@@ -58,7 +58,7 @@ void send_message_to_all(char* message, int client_id)
 void* handle_client(void* args)
 {
     Client* client = (Client*)args;
-    char buffer[BUFFER_SIZE];
+    char buffer[BUFFER_SIZE + NAME_LENGTH];
     char message_buffer[BUFFER_SIZE];
     char name_buffer[NAME_LENGTH];
 

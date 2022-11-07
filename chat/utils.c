@@ -12,22 +12,22 @@ int handle_error(int result, char* error_message)
     return result;
 }
 
-char* get_current_time_string()
+void get_current_time_string(char* time_string)
 {
-    char result[128];
     time_t raw_time;
     struct tm* time_object;
 
     time(&raw_time);
     time_object = localtime(&raw_time);
 
-    sprintf(result, "[%d:%d:%d]", time_object->tm_hour, time_object->tm_min, time_object->tm_sec);
-    
-    return result;
+    sprintf(time_string, "[%d:%d:%d]", time_object->tm_hour, time_object->tm_min, time_object->tm_sec);
 }
 
 void print_message(char* message)
 {
-    printf("%s %s", get_current_time_string(), message);
+    char* timestamp = malloc(sizeof(char) * 128);
+    get_current_time_string(timestamp);
+    printf("%s %s", timestamp, message);
     // fflush(stdout);
+    free(timestamp);
 }
