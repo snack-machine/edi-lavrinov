@@ -92,7 +92,6 @@ int main()
         pthread_create(&thread_id, 0, &handle_client, (void*)&client_socket);
         pthread_detach(thread_id);
 
-        // TODO print smth not IP
         sprintf(connection_message, "Connected user with IP: %s \n", inet_ntoa(client_address.sin_addr));
         print_message(connection_message);
     }
