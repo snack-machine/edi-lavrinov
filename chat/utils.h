@@ -22,16 +22,6 @@
 #define NUMBER_OF_CLIENTS 16
 
 
-// typedef struct
-// {
-//     int descriptor;
-//     struct sockaddr_in address;
-
-//     int id;
-//     char name[NAME_LENGTH];
-// } Client;
-
-
 int handle_error(int result, char* error_message);
 
 void get_current_time_string(char* time_string);

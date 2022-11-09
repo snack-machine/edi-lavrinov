@@ -1,8 +1,6 @@
 #include "utils.h"
 
 
-// volatile sig_atomic_t exit_flag = 0;
-
 int client_socket;
 char name[NAME_LENGTH];
 
@@ -35,16 +33,6 @@ void* send_message_handler(void* args)
     }
 
     return 0;
-
-    // while (true)
-    // {
-    //     fgets(message_buffer, BUFFER_SIZE, stdin);
-    //     sprintf(buffer, "%s: %s", name_buffer, message_buffer);
-    //     send(client_socket, buffer, strlen(buffer), 0);
-
-    //     bzero(message_buffer, BUFFER_SIZE);
-    //     bzero(buffer, BUFFER_SIZE);
-    // }
 }
 
 void* receive_message_handler(void* args)
@@ -53,47 +41,20 @@ void* receive_message_handler(void* args)
     char name_and_message[BUFFER_SIZE + NAME_LENGTH];
     int message_length;
 
-    // char message_buffer[BUFFER_SIZE];
-
     while (true)
     {
         message_length = read(socket, name_and_message, BUFFER_SIZE + NAME_LENGTH - 1);
-
-        // if (message_length == -1)
-        // {
-        //     return (void*)-1;
-        // }
 
         if (message_length > 0)
         {
             name_and_message[message_length] = 0;
             print_message(name_and_message);
         }
-
-
-
-        // recv(client_socket, message_buffer, BUFFER_SIZE, 0);
-
-        // handle_error(recv(client_socket, message_buffer, BUFFER_SIZE, 0),
-        //              "Receiving failed");
-        // print_message(message_buffer);
-
-        // bzero(message_buffer, BUFFER_SIZE);
     }
 }
 
-// void handle_sigint()
-// {
-//     exit_flag = 1;
-// }
-
 int main(int argc, char *argv[])
 {
-    // signal(SIGINT, handle_sigint);
-
-    // print_message("Enter your name: ");
-    // fgets(name_buffer, NAME_LENGTH, stdin);
-
     sprintf(name, "%s", argv[1]);
 
     struct sockaddr_in address;
@@ -105,10 +66,7 @@ int main(int argc, char *argv[])
 
     handle_error(connect(client_socket, (struct sockaddr*)&address, sizeof(address)),
                  "Connection failed");
-
-    // send(client_socket, name_buffer, NAME_LENGTH, 0);
-
-    
+  
     pthread_t send_message_thread;
     pthread_t receive_message_thread;
     void* thread_return_value;
@@ -118,16 +76,6 @@ int main(int argc, char *argv[])
 
     pthread_join(send_message_thread, &thread_return_value);
     pthread_join(receive_message_thread, &thread_return_value);
-    
-
-    // while (true)
-    // {
-    //     if (exit_flag)
-    //     {
-    //         print_message("You're disconnected.");
-    //         break;
-    //     }
-    // }
 
     close(client_socket);
 
