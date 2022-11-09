@@ -28,6 +28,6 @@ void print_message(char* message)
     char* timestamp = malloc(sizeof(char) * 128);
     get_current_time_string(timestamp);
     printf("%s %s", timestamp, message);
-    // fflush(stdout);
+    fflush(stdout);
     free(timestamp);
 }
